@@ -1,0 +1,15 @@
+#extends templates.master
+#def title
+List of all Persons#slurp
+#end def
+#def body
+<h1>$title</h1>
+<table>
+#for $person in $persons
+<tr>
+<td>$person.firstName</td>
+<td>$person.surName</td>
+</tr>
+#end for
+</table>
+#end def
