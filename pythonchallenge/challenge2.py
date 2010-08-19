@@ -3,7 +3,7 @@
 """
 http://www.pythonchallenge.com/pc/def/ocr.html
 
-Challange 2 shows a book and tells to look at the sourcecode of the page
+Challenge 2 shows a book and tells to look at the sourcecode of the page
 """
 
 from contextlib import closing

@@ -3,7 +3,7 @@
 """
 http://www.pythonchallenge.com/pc/def/map.html
 
-Challange 1 shows a image of a piece of paper showing:
+Challenge 1 shows a image of a piece of paper showing:
 K -> M
 O -> Q
 E -> G
