@@ -17,15 +17,23 @@ source_dir = r"\\190.9.220.10\data"
 destination_dir = \
         r"C:\Documents and Settings\richard.poettler\Desktop\destination"
 sleep_seconds = 30
+# TODO: add already existing files to the set
+done = set()
+log_format = '%(asctime)s %(name)s: %(message)s'
 
 logging.basicConfig(level=logging.INFO,
-        format='%(asctime)s %(name)s: %(message)s')
+        format=log_format)
 logger = logging.getLogger('watchdog')
 
-done = set()
+# copy a logfile to the destination directory
+logfile = os.path.join(destination_dir, "_copy.log")
+if not os.path.isdir(os.path.dirname(logfile)):
+    os.makedirs(os.path.dirname(logfile))
+file_formatter = logging.Formatter(log_format)
+file_handler = logging.FileHandler(logfile)
+file_handler.setFormatter(file_formatter)
+logger.addHandler(file_handler)
 
-if os.path.isdir(destination_dir):
-    shutil.rmtree(destination_dir)
 
 def md5_for_file(filename):
     with open(filename) as fileobj:
