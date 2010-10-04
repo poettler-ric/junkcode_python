@@ -18,7 +18,7 @@ class UTF8Writer:
         for row in rows:
             self.writerow(row)
 
-if __name__ == '__main__':
+def list_locations():
     with get_session() as session:
         with open(output_file, "wb") as file_obj:
             csv_writer = UTF8Writer(file_obj, quoting=csv.QUOTE_MINIMAL)
@@ -38,3 +38,6 @@ if __name__ == '__main__':
                         )
                 csv_writer.writerow([unicode(cell if cell is not None else "")
                     for cell in rowdata])
+
+if __name__ == '__main__':
+    list_locations()
