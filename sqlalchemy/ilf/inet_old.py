@@ -110,7 +110,7 @@ address_table = Table('a_address', metadata,
         Column('A_Company_A_ID', Integer),
         Column('A_P_ID', Integer),
         Column('A_LOC_ID', Integer, ForeignKey('loc_location.LOC_ID')),
-        Column('A_VC_ID', Integer),
+        Column('A_VC_ID', Integer, ForeignKey('value_country.VC_ID')),
         Column('A_Descr', String(50), key='description'),
         Column('A_Name', String(100), key='name'),
         Column('A_Name2', String(100)),
@@ -135,6 +135,19 @@ address_table = Table('a_address', metadata,
         Column('A_Timestamp', DateTime),
         )
 
+value_country_table = Table('value_country', metadata,
+        Column('VC_ID', Integer, primary_key=True),
+        Column('VC_TelPrefix', String(10)),
+        Column('VC_NoTelCityPrefix', Integer),
+        Column('VC_AddrFormat_Norm', String),
+        Column('VC_AddrFormat_PO', String),
+        Column('VC_Name_en', String(30), key='name'),
+        Column('VC_Name_de', String(30), key='name_de'),
+        Column('VC_NationalityName_en', String(40)),
+        Column('VC_NationalityName_de', String(40)),
+        Column('VC_Timestamp', DateTime),
+        )
+
 class Address(object):
     def __repr__(self):
         return "<%s, %s %s>" % (self.street, self.zip_code, self.city)
@@ -143,11 +156,20 @@ class Location(object):
     def __repr__(self):
         return u"<%s>" % self.name
 
-mapper(Address, address_table)
+class Country(object):
+    def __repr__(self):
+        return u"<%s>" % self.name
+
+mapper(Address, address_table, properties={
+    'country': relationship(Country),
+    })
 mapper(Location, location_table, properties={
+# primaryjoin is needed, because there's a A_LOC_ID column in the address
+# table.
     'address': relationship(Address,
         primaryjoin=location_table.c.LOC_A_ID==address_table.c.A_ID),
     })
+mapper(Country, value_country_table)
 
 Session = sessionmaker(bind=engine)
 

@@ -26,6 +26,7 @@ if __name__ == '__main__':
             locations = session.query(Location).all()
             for location in locations:
                 address = location.address
+                country = address.country if address else None
                 rowdata = (
                         location.LOC_ID,
                         location.name,
@@ -33,6 +34,7 @@ if __name__ == '__main__':
                         address.street if address is not None else None,
                         address.zip_code if address is not None else None,
                         address.city if address is not None else None,
+                        country.name if country is not None else None,
                         )
                 csv_writer.writerow([unicode(cell if cell is not None else "")
                     for cell in rowdata])
