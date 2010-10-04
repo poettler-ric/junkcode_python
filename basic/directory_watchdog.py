@@ -46,6 +46,7 @@ def md5_for_file(filename):
     return md5.hexdigest()
 
 
+logger.info("started watching")
 while True:
     logger.debug("checking")
     # iterate over all directories in the source folder
