@@ -22,6 +22,15 @@ def list_locations():
     with get_session() as session:
         with open(output_file, "wb") as file_obj:
             csv_writer = UTF8Writer(file_obj, quoting=csv.QUOTE_MINIMAL)
+            header=(
+                    "id",
+                    "name",
+                    "street",
+                    "zip",
+                    "city",
+                    "country",
+                    )
+            csv_writer.writerow(header)
 
             locations = session.query(Location).all()
             for location in locations:
