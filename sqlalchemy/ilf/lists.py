@@ -47,5 +47,52 @@ def list_locations():
                 csv_writer.writerow([unicode(cell if cell is not None else "")
                     for cell in rowdata])
 
+def list_companys():
+    import pprint
+    pp = pprint.PrettyPrinter()
+
+    output_file = r'c:\temp\companies.csv'
+    with get_session() as session:
+        with open(output_file, "wb") as file_obj:
+            csv_writer = UTF8Writer(file_obj, quoting=csv.QUOTE_MINIMAL)
+            header = (
+                    "id",
+                    "name",
+                    "layer",
+                    "layer1",
+                    "layer2",
+                    "layer3",
+                    "layer4",
+                    "layer5",
+                    "groupid",
+                    "legal",
+                    )
+            csv_writer.writerow(header)
+
+            locations = session.query(Location).all()
+            for location in locations:
+                group_query = session.query(Location)
+                group_query = group_query.filter(Location.layer1==location.layer1)
+                group_query = group_query.filter(Location.layer2==location.layer2)
+                group_query = group_query.filter(Location.layer3==0)
+                group_query = group_query.filter(Location.layer4==0)
+                group_query = group_query.filter(Location.layer5==0)
+                group_query = group_query.filter(Location.id_!=location.id_)
+                group = group_query.first()
+                rowdata = (
+                        location.id_,
+                        location.name,
+                        location.get_layer(),
+                        location.layer1,
+                        location.layer2,
+                        location.layer3,
+                        location.layer4,
+                        location.layer5,
+                        group.id_ if group is not None else "",
+                        'y' if location.is_legal else "n",
+                        )
+                csv_writer.writerow([unicode(cell if cell is not None else "")
+                    for cell in rowdata])
+
 if __name__ == '__main__':
     list_locations()

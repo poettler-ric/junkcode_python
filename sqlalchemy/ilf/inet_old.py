@@ -2,7 +2,7 @@
 
 from contextlib import contextmanager
 from sqlalchemy import create_engine, MetaData, Table, Column, ForeignKey
-from sqlalchemy.orm import mapper, relationship, sessionmaker
+from sqlalchemy.orm import mapper, relationship, sessionmaker, column_property
 from sqlalchemy.types import Integer, Float, String, \
         DateTime, Date, LargeBinary
 
@@ -81,7 +81,7 @@ location_table = Table('loc_location', metadata,
         Column('LOC_L3', Integer, key='layer3'),
         Column('LOC_L4', Integer, key='layer4'),
         Column('LOC_L5', Integer, key='layer5'),
-        Column('LOC_IsCompany', Integer(6), key='is_legal'),
+        Column('LOC_IsCompany', Integer(6), key='legal'),
         Column('LOC_Code', String(5), key='code'),
         Column('LOC_Inactive', Integer(6), key='inactive'),
         Column('LOC_A_ID', Integer, ForeignKey('a_address.A_ID')),
@@ -179,6 +179,7 @@ mapper(Location, location_table, properties={
 # table.
     'address': relationship(Address,
         primaryjoin=location_table.c.LOC_A_ID==address_table.c.A_ID),
+    'is_legal': column_property(location_table.c.legal==-1),
     })
 mapper(Country, value_country_table)
 
