@@ -37,7 +37,7 @@ def list_locations():
                 address = location.address
                 country = address.country if address else None
                 rowdata = (
-                        location.LOC_ID,
+                        location.id_,
                         location.name,
                         address.street if address is not None else None,
                         address.zip_code if address is not None else None,
