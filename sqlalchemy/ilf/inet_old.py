@@ -76,11 +76,11 @@ employeedata_table = Table('ed_employeedata', metadata,
 
 location_table = Table('loc_location', metadata,
         Column('LOC_ID', Integer, primary_key=True),
-        Column('LOC_L1', Integer),
-        Column('LOC_L2', Integer),
-        Column('LOC_L3', Integer),
-        Column('LOC_L4', Integer),
-        Column('LOC_L5', Integer),
+        Column('LOC_L1', Integer, key='layer1'),
+        Column('LOC_L2', Integer, key='layer2'),
+        Column('LOC_L3', Integer, key='layer3'),
+        Column('LOC_L4', Integer, key='layer4'),
+        Column('LOC_L5', Integer, key='layer5'),
         Column('LOC_IsCompany', Integer(6), key='is_legal'),
         Column('LOC_Code', String(5), key='code'),
         Column('LOC_Inactive', Integer(6), key='inactive'),
@@ -153,6 +153,17 @@ class Address(object):
         return "<%s, %s %s>" % (self.street, self.zip_code, self.city)
 
 class Location(object):
+    def get_layer(self):
+        if self.layer5 != 0:
+            return 5
+        if self.layer4 != 0:
+            return 4
+        if self.layer3 != 0:
+            return 3
+        if self.layer2 != 0:
+            return 2
+        return 1
+
     def __repr__(self):
         return u"<%s>" % self.name
 
