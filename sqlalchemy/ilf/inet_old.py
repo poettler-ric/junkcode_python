@@ -175,8 +175,6 @@ mapper(Address, address_table, properties={
     'country': relationship(Country),
     })
 mapper(Location, location_table, properties={
-# primaryjoin is needed, because there's a A_LOC_ID column in the address
-# table.
     'address': relationship(Address,
         primaryjoin=location_table.c.LOC_A_ID==address_table.c.A_ID),
     'is_legal': column_property(location_table.c.legal==-1),

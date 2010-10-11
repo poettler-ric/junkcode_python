@@ -72,8 +72,10 @@ def list_companys():
             locations = session.query(Location).all()
             for location in locations:
                 group_query = session.query(Location)
-                group_query = group_query.filter(Location.layer1==location.layer1)
-                group_query = group_query.filter(Location.layer2==location.layer2)
+                group_query = group_query.filter(
+                        Location.layer1==location.layer1)
+                group_query = group_query.filter(
+                        Location.layer2==location.layer2)
                 group_query = group_query.filter(Location.layer3==0)
                 group_query = group_query.filter(Location.layer4==0)
                 group_query = group_query.filter(Location.layer5==0)
