@@ -2,6 +2,7 @@
 
 from inet_old import get_session
 from inet_old import Location
+from inet_old import Employee, EmployeeData, EmployeeFunction
 
 import csv
 
@@ -85,6 +86,30 @@ def list_companys():
                 group_query = group_query.filter(Location.layer5==0)
                 group_query = group_query.filter(Location.id_!=location.id_)
                 group = group_query.first()
+
+                manager1 = location.manager1
+                manager2 = location.manager2
+                manager3 = location.manager3
+
+                if manager1 is None:
+                    manager_query = session.query(Employee)
+                    manager_query = manager_query.join((EmployeeData,
+                        Employee.E_Current_ED_ID==\
+                                EmployeeData.ED_ID))
+                    manager_query = manager_query.filter(
+                            EmployeeData.quit_date == None)
+                    manager_query = manager_query.filter(
+                            EmployeeData.organized_in==location)
+                    manager_query = manager_query.join(EmployeeFunction)
+                    manager_query = manager_query.filter(
+                            EmployeeFunction.name.like('managing director'))
+                    managers = manager_query.all()
+                    assert len(managers) <= 3, \
+                            "we at the moment we can only handle 3 managers"
+                    manager1 = managers[0] if len(managers) > 0 else None
+                    manager2 = managers[1] if len(managers) > 1 else None
+                    manager3 = managers[2] if len(managers) > 2 else None
+
                 rowdata = (
                         location.id_,
                         location.name,
@@ -97,9 +122,9 @@ def list_companys():
                         group.id_ if group is not None else "",
                         group.name if group is not None else "",
                         'y' if location.is_legal else "n",
-                        location.manager1,
-                        location.manager2,
-                        location.manager3,
+                        manager1.login if manager1 is not None else None,
+                        manager2.login if manager2 is not None else None,
+                        manager3.login if manager3 is not None else None,
                         )
                 csv_writer.writerow([unicode(cell if cell is not None else "")
                     for cell in rowdata])

@@ -58,7 +58,7 @@ employeedata_table = Table('ed_employeedata', metadata,
         Column('ED_VDEP_ID', Integer), # TODO: link fields
         Column('ED_VCC_ID', Integer),
         Column('ED_VEMT_ID', Integer),
-        Column('ED_VEF_ID', Integer),
+        Column('ED_VEF_ID', Integer, ForeignKey('value_employeefunc.VEF_ID')),
         Column('ED_VGE_ID', Integer),
         Column('ED_VEE_ID', Integer),
         Column('ED_GroupLeader_E_ID', Integer, ForeignKey('e_employee.E_ID')),
@@ -167,6 +167,13 @@ value_country_table = Table('value_country', metadata,
         Column('VC_Timestamp', DateTime),
         )
 
+value_employee_function_table = Table('value_employeefunc', metadata,
+        Column('VEF_ID', Integer, primary_key=True),
+        Column('VEF_Name_en', String(50), key='name'),
+        Column('VEF_Name_de', String(50), key='name_de'),
+        Column('VEF_Timestamp', DateTime),
+        )
+
 class Address(object):
     def __repr__(self):
         return "<%s, %s %s>" % (self.street, self.zip_code, self.city)
@@ -194,9 +201,17 @@ class Employee(object):
     def __repr__(self):
         return u"<%s %s>" % (self.personal_number, self.login)
 
+class EmployeeData(object):
+    def __repr__(self):
+        return u"<%s %s to %s>" % (self.employee.login, self.from_, self.to)
+
 class Person (object):
     def __repr__(self):
         return u"<%s %s>" % (self.name, self.firstname)
+
+class EmployeeFunction(object):
+    def __repr__(self):
+        return u"<%s>" % (self.name)
 
 mapper(Address, address_table, properties={
     'country': relationship(Country),
@@ -213,7 +228,27 @@ mapper(Location, location_table, properties={
     'is_legal': column_property(location_table.c.legal==-1),
     })
 mapper(Country, value_country_table)
-mapper(Employee, employee_table)
+mapper(Employee, employee_table, properties={
+    'data': relationship(EmployeeData,
+        primaryjoin=\
+                employee_table.c.E_Current_ED_ID==employeedata_table.c.ED_ID,
+        backref='employee',
+        uselist=False),
+    })
+mapper(EmployeeData, employeedata_table, properties={
+    'organized_in': relationship(Location,
+        primaryjoin=employeedata_table.c.ED_LOC_ID==location_table.c.id_),
+    'contract_in': relationship(Location,
+        primaryjoin=\
+                employeedata_table.c.ED_Contract_Company_LOC_ID==\
+                location_table.c.id_),
+    'books_in': relationship(Location,
+        primaryjoin=\
+                employeedata_table.c.ED_TimeSheet_Company_LOC_ID==\
+                location_table.c.id_),
+    'function': relationship(EmployeeFunction)
+    })
+mapper(EmployeeFunction, value_employee_function_table)
 
 Session = sessionmaker(bind=engine)
 
