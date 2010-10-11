@@ -131,3 +131,4 @@ def list_companys():
 
 if __name__ == '__main__':
     list_locations()
+    list_companys()
