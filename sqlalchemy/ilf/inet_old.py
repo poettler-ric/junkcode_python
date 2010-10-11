@@ -22,7 +22,7 @@ metadata = MetaData(engine)
 
 employee_table = Table('e_employee', metadata,
         Column('E_ID', Integer, primary_key=True),
-        Column('E_P_ID', Integer), # TODO link persons
+        Column('E_P_ID', Integer, ForeignKey('p_person.P_ID')),
         Column('E_Current_ED_ID',
             Integer,
             ForeignKey('ed_employeedata.ED_ID')),
@@ -72,6 +72,25 @@ employeedata_table = Table('ed_employeedata', metadata,
         Column('ED_PartTimePerc', Float),
         Column('ED_Roiom', String(20)),
         Column('ED_VSRC_Rate', String(1)),
+        )
+
+person_table = Table('p_person', metadata,
+        Column('P_ID', Integer, primary_key=True),
+        Column('P_Name', String(100), key='name'),
+        Column('P_FirstNames', String(150), key='firstname'),
+        Column('P_SortName', String(200)),
+        Column('P_Title', String(30)),
+        Column('P_Sex', Integer, key='gender'),
+        Column('P_Nation_VC_ID', Integer),
+        Column('P_Nation2_VC_ID', Integer),
+        Column('P_VL_ID', Integer),
+        Column('P_VCS_ID', Integer),
+        Column('P_Birthday', Date, key='birthday'),
+        Column('P_Main_A_ID', Integer),
+        Column('P_ShowAdditionalAddr', Integer),
+        Column('P_Christmas_ID', Integer),
+        Column('P_Christmas_E_ID', Integer),
+        Column('P_Timestamp', DateTime),
         )
 
 location_table = Table('loc_location', metadata,
@@ -171,15 +190,30 @@ class Country(object):
     def __repr__(self):
         return u"<%s>" % self.name
 
+class Employee(object):
+    def __repr__(self):
+        return u"<%s %s>" % (self.personal_number, self.login)
+
+class Person (object):
+    def __repr__(self):
+        return u"<%s %s>" % (self.name, self.firstname)
+
 mapper(Address, address_table, properties={
     'country': relationship(Country),
     })
 mapper(Location, location_table, properties={
     'address': relationship(Address,
         primaryjoin=location_table.c.LOC_A_ID==address_table.c.A_ID),
+    'manager1': relationship(Employee,
+        primaryjoin=location_table.c.LOC_Manager1_E_ID==employee_table.c.E_ID),
+    'manager2': relationship(Employee,
+        primaryjoin=location_table.c.LOC_Manager2_E_ID==employee_table.c.E_ID),
+    'manager3': relationship(Employee,
+        primaryjoin=location_table.c.LOC_Manager3_E_ID==employee_table.c.E_ID),
     'is_legal': column_property(location_table.c.legal==-1),
     })
 mapper(Country, value_country_table)
+mapper(Employee, employee_table)
 
 Session = sessionmaker(bind=engine)
 

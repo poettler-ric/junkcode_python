@@ -67,6 +67,9 @@ def list_companys():
                     "groupid",
                     "groupname",
                     "legal",
+                    "manager1",
+                    "manager2",
+                    "manager3",
                     )
             csv_writer.writerow(header)
 
@@ -94,6 +97,9 @@ def list_companys():
                         group.id_ if group is not None else "",
                         group.name if group is not None else "",
                         'y' if location.is_legal else "n",
+                        location.manager1,
+                        location.manager2,
+                        location.manager3,
                         )
                 csv_writer.writerow([unicode(cell if cell is not None else "")
                     for cell in rowdata])
