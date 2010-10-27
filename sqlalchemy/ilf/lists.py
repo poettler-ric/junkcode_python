@@ -58,9 +58,6 @@ def list_locations():
                     for cell in rowdata])
 
 def list_companys():
-    import pprint
-    pp = pprint.PrettyPrinter()
-
     output_file = r'c:\temp\companies.csv'
     with get_session() as session:
         with open(output_file, "wb") as file_obj:
