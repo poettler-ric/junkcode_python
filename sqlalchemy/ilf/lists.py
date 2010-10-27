@@ -3,6 +3,7 @@
 from inet_old import get_session
 from inet_old import Location
 from inet_old import Employee, EmployeeData, EmployeeFunction
+from inet_old import Project
 
 import csv
 
@@ -129,6 +130,38 @@ def list_companys():
                 csv_writer.writerow([unicode(cell if cell is not None else "")
                     for cell in rowdata])
 
+def list_customers():
+    output_file = r'c:\temp\customers.csv'
+    with get_session() as session:
+        with open(output_file, "wb") as file_obj:
+            csv_writer = UTF8Writer(file_obj, quoting=csv.QUOTE_MINIMAL)
+            header=(
+                    "location_id",
+                    "location",
+                    "project",
+                    "project_name",
+                    "customer_id",
+                    "customer",
+                    )
+            csv_writer.writerow(header)
+
+            locations = session.query(Location).all()
+            for location in locations:
+                for project in location.projects:
+                    for customer in project.customers:
+                        rowdata = (
+                                location.id_,
+                                location.name,
+                                project.number,
+                                project.name,
+                                customer.company.C_ID,
+                                customer.company.name,
+                                )
+                        csv_writer.writerow([unicode(cell \
+                                if cell is not None else "") \
+                                for cell in rowdata])
+
 if __name__ == '__main__':
     list_locations()
     list_companys()
+    list_customers()
