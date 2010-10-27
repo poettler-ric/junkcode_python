@@ -2,7 +2,8 @@
 
 from contextlib import contextmanager
 from sqlalchemy import create_engine, MetaData, Table, Column, ForeignKey
-from sqlalchemy.orm import mapper, relationship, sessionmaker, column_property
+from sqlalchemy.orm import mapper, sessionmaker
+from sqlalchemy.orm import backref, relationship, column_property
 from sqlalchemy.types import Integer, Float, String, \
         DateTime, Date, LargeBinary
 
@@ -130,6 +131,27 @@ project_table = Table('pr_project', metadata,
         Column('PR_Timestamp', DateTime),
         )
 
+project_customer_table = Table('prcust_projectcustomer', metadata,
+        Column('PRCUST_ID', Integer, primary_key=True),
+        Column('PRCUST_PR_ID', Integer, ForeignKey('pr_project.PR_ID')),
+        Column('PRCUST_Company_A_ID', Integer, ForeignKey('a_address.A_ID')),
+        Column('PRCUST_P_ID', Integer),
+        Column('PRCUST_Text', String(240)),
+        Column('PRCUST_Timestamp', DateTime),
+        )
+
+company_table = Table('c_company', metadata,
+        Column('C_ID', Integer, primary_key=True),
+        Column('C_Name', String(200), key='name'),
+        Column('C_SortName', String(200)),
+        Column('C_OwnCompany', Integer(6)),
+        Column('C_URL', String(150), key='url'),
+        Column('C_VATID', String(30)),
+        Column('C_Main_A_ID', Integer, ForeignKey('a_address.A_ID')),
+        Column('C_MainFOAs', String(250)),
+        Column('C_Timestamp', DateTime),
+        )
+
 location_table = Table('loc_location', metadata,
         Column('LOC_ID', Integer, primary_key=True, key='id_'),
         Column('LOC_L1', Integer, key='layer1'),
@@ -162,7 +184,7 @@ location_table = Table('loc_location', metadata,
 address_table = Table('a_address', metadata,
         Column('A_ID', Integer, primary_key=True),
         Column('A_VAT_ID', Integer), # TODO: link entries
-        Column('A_C_ID', Integer),
+        Column('A_C_ID', Integer, ForeignKey('c_company.C_ID')),
         Column('A_Company_A_ID', Integer),
         Column('A_P_ID', Integer),
         Column('A_LOC_ID', Integer, ForeignKey('loc_location.id_')),
@@ -220,6 +242,10 @@ class Project(object):
     def __repr__(self):
         return u"<Project: %s %s>" % (self.number, self.name)
 
+class Company(object):
+    def __repr__(self):
+        return u"<Company: %s>" % self.name
+
 class Location(object):
     def get_layer(self):
         if self.layer5 != 0:
@@ -264,6 +290,16 @@ mapper(Project, project_table, properties={
     'is_erp': column_property(project_table.c.erp==-1), # is in agresso or not
     'is_flat': column_property(project_table.c.bill_costs==0),
     'is_confidential': column_property(project_table.c.confidential==-1),
+    'customers': relationship(Address,
+        secondary=project_customer_table,
+        backref='orders'),
+    'executer': relationship(Location,
+        backref='projects'),
+    })
+mapper(Company, company_table, properties={
+    'address': relationship(Address,
+        primaryjoin=company_table.c.C_ID==address_table.c.A_C_ID,
+        backref=backref('company', uselist=False)),
     })
 mapper(Location, location_table, properties={
     'address': relationship(Address,
