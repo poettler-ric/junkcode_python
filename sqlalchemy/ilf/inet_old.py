@@ -213,11 +213,12 @@ value_employee_function_table = Table('value_employeefunc', metadata,
 
 class Address(object):
     def __repr__(self):
-        return "<%s, %s %s>" % (self.street, self.zip_code, self.city)
+        return "<Address: %s, %s %s>" \
+                % (self.street, self.zip_code, self.city)
 
 class Project(object):
     def __repr__(self):
-        return u"<%s %s>" % (self.number, self.name)
+        return u"<Project: %s %s>" % (self.number, self.name)
 
 class Location(object):
     def get_layer(self):
@@ -232,27 +233,28 @@ class Location(object):
         return 1
 
     def __repr__(self):
-        return u"<%s>" % self.name
+        return u"<Location: %s>" % self.name
 
 class Country(object):
     def __repr__(self):
-        return u"<%s>" % self.name
+        return u"<Country: %s>" % self.name
 
 class Employee(object):
     def __repr__(self):
-        return u"<%s %s>" % (self.personal_number, self.login)
+        return u"<Employee: %s %s>" % (self.personal_number, self.login)
 
 class EmployeeData(object):
     def __repr__(self):
-        return u"<%s %s to %s>" % (self.employee.login, self.from_, self.to)
+        return u"<EmployeeData: %s %s to %s>" \
+                % (self.employee.login, self.from_, self.to)
 
 class Person (object):
     def __repr__(self):
-        return u"<%s %s>" % (self.name, self.firstname)
+        return u"<Person: %s %s>" % (self.name, self.firstname)
 
 class EmployeeFunction(object):
     def __repr__(self):
-        return u"<%s>" % (self.name)
+        return u"<EmployeeFunction: %s>" % self.name
 
 mapper(Address, address_table, properties={
     'country': relationship(Country),
