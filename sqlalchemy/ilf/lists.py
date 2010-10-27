@@ -5,6 +5,14 @@ from inet_old import Location
 from inet_old import Employee, EmployeeData, EmployeeFunction
 from inet_old import Project
 
+# imports for higher efficiency of the sql selects
+from inet_old import location_table
+from inet_old import project_table
+from inet_old import project_country_table
+from inet_old import value_country_table
+from inet_old import Country
+from sqlalchemy import select
+
 import csv
 
 
@@ -161,7 +169,41 @@ def list_customers():
                                 if cell is not None else "") \
                                 for cell in rowdata])
 
+def list_project_country_locations():
+    output_file = r'c:\temp\countries.csv'
+    with get_session() as session:
+        with open(output_file, "wb") as file_obj:
+            csv_writer = UTF8Writer(file_obj, quoting=csv.QUOTE_MINIMAL)
+            header = (
+                    "location_id",
+                    "location",
+                    "country_id",
+                    "country",
+                    )
+            csv_writer.writerow(header)
+
+            join = location_table.join(project_table)
+            join = join.join(project_country_table)
+            join = join.join(value_country_table)
+            select_from = select([location_table, value_country_table],
+                    from_obj=join)\
+                            .group_by(location_table.c.id_,
+                                    value_country_table.c.VC_ID)
+            query = session.query(Location, Country).from_statement(select_from)
+
+            for location, country in query.all():
+                rowdata = (
+                        location.id_,
+                        location.name,
+                        country.VC_ID,
+                        country.name,
+                        )
+                csv_writer.writerow([unicode(cell \
+                        if cell is not None else "") \
+                        for cell in rowdata])
+
 if __name__ == '__main__':
     list_locations()
     list_companys()
     list_customers()
+    list_project_country_locations()
