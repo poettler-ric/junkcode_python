@@ -93,6 +93,43 @@ person_table = Table('p_person', metadata,
         Column('P_Timestamp', DateTime),
         )
 
+project_table = Table('pr_project', metadata,
+        Column('PR_ID', Integer, primary_key=True),
+        Column('PR_PNr', String(10), key='number'),
+        Column('PR_ONr', Integer),
+        Column('PR_Master_PR_ID', Integer),
+        Column('PR_Internal', Integer(6), key='internal'),
+        Column('PR_Confidential', Integer(6), key='confidential'),
+        Column('PR_Important', Integer(6), key='importance'),
+        Column('PR_AvailableERP', Integer(6), key='erp'),
+        Column('PR_BillCosts', Integer(6), key='bill_costs'),
+        Column('PR_VPRPT_ID', Integer),
+        Column('PR_Contract_Company_LOC_ID',
+            Integer,
+            ForeignKey('loc_location.id_')),
+        Column('PR_InCharge_VDEP_ID', Integer),
+        Column('PR_Redundant_VPRS_ID', Integer),
+        Column('PR_Descr_de', String(150), key='name_de'),
+        Column('PR_Descr_en', String(150), key='name'),
+        Column('PR_Text_de', String, key='text_de'),
+        Column('PR_Text_en', String, key='text'),
+        Column('PR_TechData_en', String, key='techdata'),
+        Column('PR_TechData_de', String, key='techdata_de'),
+        Column('PR_Identified', Date, key='identified'),
+        Column('PR_Start', Date, key='start'),
+        Column('PR_End', Date, key='end'),
+        Column('PR_OfferDate', DateTime, key='offer_date'),
+        Column('PR_OfferPrice_Total', Float, key='offer_price'),
+        Column('PR_OfferPrice_Own', Float, key='offer_price_own'),
+        Column('PR_ContractPrice_Total', Float, key='contract_price'),
+        Column('PR_ContractPrice_Own', Float, key='contract_price_own'),
+        Column('PR_CustomerBudget', Float, key='customer_budget'),
+        Column('PR_InvestPrice_Total', Float, key='invest_price'),
+        Column('PR_SuccessPercent', Integer, key='success_percent'),
+        Column('PR_Memo', String, key='memo'),
+        Column('PR_Timestamp', DateTime),
+        )
+
 location_table = Table('loc_location', metadata,
         Column('LOC_ID', Integer, primary_key=True, key='id_'),
         Column('LOC_L1', Integer, key='layer1'),
@@ -178,6 +215,10 @@ class Address(object):
     def __repr__(self):
         return "<%s, %s %s>" % (self.street, self.zip_code, self.city)
 
+class Project(object):
+    def __repr__(self):
+        return u"<%s %s>" % (self.number, self.name)
+
 class Location(object):
     def get_layer(self):
         if self.layer5 != 0:
@@ -215,6 +256,12 @@ class EmployeeFunction(object):
 
 mapper(Address, address_table, properties={
     'country': relationship(Country),
+    })
+mapper(Project, project_table, properties={
+    'is_internal': column_property(project_table.c.internal==-1),
+    'is_erp': column_property(project_table.c.erp==-1), # is in agresso or not
+    'is_flat': column_property(project_table.c.bill_costs==0),
+    'is_confidential': column_property(project_table.c.confidential==-1),
     })
 mapper(Location, location_table, properties={
     'address': relationship(Address,
