@@ -140,6 +140,14 @@ project_customer_table = Table('prcust_projectcustomer', metadata,
         Column('PRCUST_Timestamp', DateTime),
         )
 
+project_country_table = Table('prc_projectcountry', metadata,
+        Column('PRC_ID', Integer, primary_key=True),
+        Column('PRC_PR_ID', Integer, ForeignKey('pr_project.PR_ID')),
+        Column('PRC_VC_ID', Integer, ForeignKey('value_country.VC_ID')),
+        Column('PRC_Text', String(240)),
+        Column('PRC_Timestamp', DateTime),
+        )
+
 company_table = Table('c_company', metadata,
         Column('C_ID', Integer, primary_key=True),
         Column('C_Name', String(200), key='name'),
@@ -294,6 +302,9 @@ mapper(Project, project_table, properties={
         secondary=project_customer_table,
         backref='orders'),
     'executer': relationship(Location,
+        backref='projects'),
+    'countries': relationship(Country,
+        secondary=project_country_table,
         backref='projects'),
     })
 mapper(Company, company_table, properties={
