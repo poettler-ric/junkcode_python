@@ -57,7 +57,7 @@ employeedata_table = Table('ed_employeedata', metadata,
             ForeignKey('loc_location.id_')),
         Column('ED_LOC_ID', Integer, ForeignKey('loc_location.id_')),
         Column('ED_VDEP_ID', Integer, ForeignKey('value_department.VDEP_ID')),
-        Column('ED_VCC_ID', Integer),
+        Column('ED_VCC_ID', Integer, ForeignKey('value_costcenter.VCC_ID')),
         Column('ED_VEMT_ID', Integer),
         Column('ED_VEF_ID', Integer, ForeignKey('value_employeefunc.VEF_ID')),
         Column('ED_VGE_ID', Integer),
@@ -261,6 +261,14 @@ value_employee_function_table = Table('value_employeefunc', metadata,
         Column('VEF_Timestamp', DateTime),
         )
 
+value_costcenter_table = Table('value_costcenter', metadata,
+        Column('VCC_ID', Integer, primary_key=True),
+        Column('VCC_Code', String(15), key='code'),
+        Column('VCC_Company_LOC_ID', Integer, ForeignKey('loc_location.id_')),
+        Column('VCC_Inactive', Integer, key='inactive'),
+        Column('VCC_Name', String(50), key='name'),
+        )
+
 class Address(object):
     def __repr__(self):
         return "<Address: %s, %s %s>" \
@@ -313,6 +321,10 @@ class Person (object):
 class EmployeeFunction(object):
     def __repr__(self):
         return u"<EmployeeFunction: %s>" % self.name
+
+class CostCenter(object):
+    def __repr__(self):
+        return u"<CostCenter: %s>" % self.name
 
 mapper(Address, address_table, properties={
     'country': relationship(Country),
@@ -378,8 +390,12 @@ mapper(EmployeeData, employeedata_table, properties={
                 location_table.c.id_),
     'function': relationship(EmployeeFunction),
     'department': relationship(Department),
+    'cost_center': relationship(CostCenter),
     })
 mapper(EmployeeFunction, value_employee_function_table)
+mapper(CostCenter, value_costcenter_table, properties={
+    'location': relationship(Location),
+    })
 
 Session = sessionmaker(bind=engine)
 
