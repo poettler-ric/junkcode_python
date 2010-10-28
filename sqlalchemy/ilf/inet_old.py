@@ -71,7 +71,7 @@ employeedata_table = Table('ed_employeedata', metadata,
         Column('ED_EntryDate', DateTime, key='entry_date'),
         Column('ED_QuitDate', DateTime, key='quit_date'),
         Column('ED_PartTimePerc', Float),
-        Column('ED_Roiom', String(20)),
+        Column('ED_Room', String(20)),
         Column('ED_VSRC_Rate', String(1)),
         )
 
