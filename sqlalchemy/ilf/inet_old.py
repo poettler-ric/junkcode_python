@@ -56,7 +56,7 @@ employeedata_table = Table('ed_employeedata', metadata,
             Integer,
             ForeignKey('loc_location.id_')),
         Column('ED_LOC_ID', Integer, ForeignKey('loc_location.id_')),
-        Column('ED_VDEP_ID', Integer), # TODO: link fields
+        Column('ED_VDEP_ID', Integer, ForeignKey('value_department.VDEP_ID')),
         Column('ED_VCC_ID', Integer),
         Column('ED_VEMT_ID', Integer),
         Column('ED_VEF_ID', Integer, ForeignKey('value_employeefunc.VEF_ID')),
@@ -189,6 +189,26 @@ location_table = Table('loc_location', metadata,
         Column('LOC_Timestamp', DateTime, key='timestamp'),
         )
 
+value_department_table = Table('value_department', metadata,
+        Column('VDEP_ID', Integer, primary_key=True),
+        Column('VDEP_L1', Integer, key='layer1'),
+        Column('VDEP_L2', Integer, key='layer2'),
+        Column('VDEP_L3', Integer, key='layer3'),
+        Column('VDEP_Manager1_E_ID', Integer, ForeignKey('e_employee.E_ID')),
+        Column('VDEP_Manager2_E_ID', Integer, ForeignKey('e_employee.E_ID')),
+        Column('VDEP_Manager3_E_ID', Integer, ForeignKey('e_employee.E_ID')),
+        Column('VDEP_Code', String(15), key='code'),
+        Column('VDEP_Inactive', Integer, key='inactive'),
+        Column('VDEP_VCC_ID', Integer, ForeignKey('value_costcenter.VCC_ID')),
+        Column('VDEP_Name_en', String(50), key='name'),
+        Column('VDEP_Name_de', String(50), key='name_de'),
+        Column('VDEP_Resp_Project_VIA_ID', Integer), # TODO: Link VIA
+        Column('VDEP_Resp_ProjChange_VIA_ID', Integer),
+        Column('VDEP_Resp_Employee_VIA_ID', Integer),
+        Column('VDEP_Resp_ERP_VIA_ID', Integer),
+        Column('VDEP_Timestamp', DateTime),
+        )
+
 address_table = Table('a_address', metadata,
         Column('A_ID', Integer, primary_key=True),
         Column('A_VAT_ID', Integer), # TODO: link entries
@@ -269,6 +289,10 @@ class Location(object):
     def __repr__(self):
         return u"<Location: %s>" % self.name
 
+class Department(object):
+    def __repr__(self):
+        return u"<Department: %s %s>" % (self.code, self.name)
+
 class Country(object):
     def __repr__(self):
         return u"<Country: %s>" % self.name
@@ -323,6 +347,16 @@ mapper(Location, location_table, properties={
         primaryjoin=location_table.c.LOC_Manager3_E_ID==employee_table.c.E_ID),
     'is_legal': column_property(location_table.c.legal==-1),
     })
+mapper(Department, value_department_table, properties={
+    'manager1': relationship(Employee,
+        primaryjoin=value_department_table.c.VDEP_Manager1_E_ID==employee_table.c.E_ID),
+    'manager2': relationship(Employee,
+        primaryjoin=value_department_table.c.VDEP_Manager2_E_ID==employee_table.c.E_ID),
+    'manager3': relationship(Employee,
+        primaryjoin=value_department_table.c.VDEP_Manager3_E_ID==employee_table.c.E_ID),
+    'is_inactive': column_property(value_department_table.c.inactive!=0),
+    'cost_center': relationship(CostCenter),
+    })
 mapper(Country, value_country_table)
 mapper(Employee, employee_table, properties={
     'data': relationship(EmployeeData,
@@ -342,7 +376,8 @@ mapper(EmployeeData, employeedata_table, properties={
         primaryjoin=\
                 employeedata_table.c.ED_TimeSheet_Company_LOC_ID==\
                 location_table.c.id_),
-    'function': relationship(EmployeeFunction)
+    'function': relationship(EmployeeFunction),
+    'department': relationship(Department),
     })
 mapper(EmployeeFunction, value_employee_function_table)
 
