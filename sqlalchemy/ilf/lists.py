@@ -249,9 +249,43 @@ def list_departments():
                         if cell is not None else "") \
                         for cell in rowdata])
 
+def list_employees():
+    output_file = r'c:\temp\employee.csv'
+    with get_session() as session:
+        with open(output_file, "wb") as file_obj:
+            csv_writer = UTF8Writer(file_obj, quoting=csv.QUOTE_MINIMAL)
+            header = (
+                    "id",
+                    "name",
+                    "first_name",
+                    "department_id",
+                    "department_name",
+                    )
+            csv_writer.writerow(header)
+
+            query = session.query(Employee)
+            query = query.join((EmployeeData,
+                Employee.E_Current_ED_ID==EmployeeData.ED_ID))
+            query = query.filter(EmployeeData.quit_date==None)
+            for employee in query.all():
+                person = employee.person
+                data = employee.data
+                department = data.department if data is not None else None
+                rowdata = (
+                        employee.E_ID,
+                        person.name,
+                        person.firstname,
+                        department.VDEP_ID if department is not None else None,
+                        department.name if department is not None else None,
+                        )
+                csv_writer.writerow([unicode(cell \
+                        if cell is not None else "") \
+                        for cell in rowdata])
+
 if __name__ == '__main__':
     list_locations()
     list_companys()
     list_customers()
     list_project_country_locations()
     list_departments()
+    list_employees()
