@@ -373,11 +373,11 @@ mapper(Country, value_country_table)
 mapper(Employee, employee_table, properties={
     'data': relationship(EmployeeData,
         primaryjoin=\
-                employee_table.c.E_Current_ED_ID==employeedata_table.c.ED_ID,
-        backref='employee',
-        uselist=False),
+                employee_table.c.E_Current_ED_ID==employeedata_table.c.ED_ID),
     })
 mapper(EmployeeData, employeedata_table, properties={
+    'employee': relationship(Employee,
+        primaryjoin=employeedata_table.c.ED_E_ID==employee_table.c.E_ID),
     'organized_in': relationship(Location,
         primaryjoin=employeedata_table.c.ED_LOC_ID==location_table.c.id_),
     'contract_in': relationship(Location,
