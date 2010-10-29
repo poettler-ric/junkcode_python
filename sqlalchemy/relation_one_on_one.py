@@ -6,6 +6,7 @@ from contextlib import contextmanager
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy import Table, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import mapper, sessionmaker, relationship
+from sqlalchemy.orm import backref
 
 engine = create_engine(r'sqlite://', echo=True)
 metadata = MetaData(engine)
@@ -35,12 +36,10 @@ class Note(object):
         return "<note: %s author: %s>" % (self.note, self.author_id)
 
 mapper(Author, author_table, properties={
-    # should be taken, because of uselist
-    'note': relationship(Note, backref='author', uselist=False)
+    #'note': relationship(Note, backref='author', uselist=False)
     })
 mapper(Note, note_table, properties={
-    # here the uselist can't be set
-    #'author': relationship(Author, backref='notes')
+    'author': relationship(Author, backref=backref('notes', uselist=False))
     })
 
 
@@ -79,5 +78,7 @@ with get_session() as session:
     session.query(Note).get(2).author = michael
     session.query(Note).get(3).author = richi
     session.query(Note).get(4).author = michael
+
+with get_session() as session:
     for note in session.query(Note):
         print note
