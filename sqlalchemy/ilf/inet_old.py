@@ -361,11 +361,14 @@ mapper(Location, location_table, properties={
     })
 mapper(Department, value_department_table, properties={
     'manager1': relationship(Employee,
-        primaryjoin=value_department_table.c.VDEP_Manager1_E_ID==employee_table.c.E_ID),
+        primaryjoin=value_department_table.c.VDEP_Manager1_E_ID\
+                ==employee_table.c.E_ID),
     'manager2': relationship(Employee,
-        primaryjoin=value_department_table.c.VDEP_Manager2_E_ID==employee_table.c.E_ID),
+        primaryjoin=value_department_table.c.VDEP_Manager2_E_ID\
+                ==employee_table.c.E_ID),
     'manager3': relationship(Employee,
-        primaryjoin=value_department_table.c.VDEP_Manager3_E_ID==employee_table.c.E_ID),
+        primaryjoin=value_department_table.c.VDEP_Manager3_E_ID\
+                ==employee_table.c.E_ID),
     'is_inactive': column_property(value_department_table.c.inactive!=0),
     'cost_center': relationship(CostCenter),
     })
