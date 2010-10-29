@@ -377,7 +377,9 @@ mapper(Employee, employee_table, properties={
     'data': relationship(EmployeeData,
         primaryjoin=\
                 employee_table.c.E_Current_ED_ID==employeedata_table.c.ED_ID),
+    'person': relationship(Person, uselist=False)
     })
+mapper(Person, person_table)
 mapper(EmployeeData, employeedata_table, properties={
     'employee': relationship(Employee,
         primaryjoin=employeedata_table.c.ED_E_ID==employee_table.c.E_ID),
