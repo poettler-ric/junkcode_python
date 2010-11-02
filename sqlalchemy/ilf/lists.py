@@ -5,6 +5,7 @@ from inet_old import Location
 from inet_old import Employee, EmployeeData, EmployeeFunction
 from inet_old import Project
 from inet_old import Department
+from inet_old import SalaryRegionCost
 
 # imports for higher efficiency of the sql selects
 from inet_old import location_table
@@ -282,6 +283,43 @@ def list_employees():
                         if cell is not None else "") \
                         for cell in rowdata])
 
+def list_salarys():
+    output_file = r'c:\temp\salarys.csv'
+    with get_session() as session:
+        """query = session.query(SalaryRegionCost)
+        for regioncost in query.all():
+            print regioncost"""
+        with open(output_file, "wb") as file_obj:
+            csv_writer = UTF8Writer(file_obj, quoting=csv.QUOTE_MINIMAL)
+            header = (
+                    'region_id',
+                    'region',
+                    'year',
+                    'rate_a',
+                    'rate_b',
+                    'rate_c',
+                    'rate_d',
+                    'rate_e',
+                    )
+            csv_writer.writerow(header)
+
+            query = session.query(SalaryRegionCost)
+            for regioncost in query.all():
+                region = regioncost.region
+                rowdata = (
+                        region.VSR_ID if region is not None else "",
+                        region.name if region is not None else "",
+                        regioncost.year,
+                        regioncost.rate_a,
+                        regioncost.rate_b,
+                        regioncost.rate_c,
+                        regioncost.rate_d,
+                        regioncost.rate_e,
+                        )
+                csv_writer.writerow([unicode(cell \
+                        if cell is not None else "") \
+                        for cell in rowdata])
+
 if __name__ == '__main__':
     list_locations()
     list_companys()
@@ -289,3 +327,4 @@ if __name__ == '__main__':
     list_project_country_locations()
     list_departments()
     list_employees()
+    list_salarys()
