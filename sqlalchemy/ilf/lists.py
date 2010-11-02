@@ -387,6 +387,29 @@ def list_cost_centers():
                         if cell is not None else "") \
                         for cell in rowdata])
 
+def list_projects():
+    output_file = r'c:\temp\projects.csv'
+    with get_session() as session:
+        with open(output_file, "wb") as file_obj:
+            csv_writer = UTF8Writer(file_obj, quoting=csv.QUOTE_MINIMAL)
+            header=(
+                    "project_id",
+                    "project_number",
+                    "project_name",
+                    )
+            csv_writer.writerow(header)
+
+            query = session.query(Project)
+            for project in query.all():
+                rowdata = (
+                        project.PR_ID,
+                        project.number,
+                        project.name,
+                        )
+                csv_writer.writerow([unicode(cell \
+                        if cell is not None else "") \
+                        for cell in rowdata])
+
 if __name__ == '__main__':
     list_locations()
     list_companys()
@@ -397,3 +420,4 @@ if __name__ == '__main__':
     list_salarys()
     list_salary_locations()
     list_cost_centers()
+    list_projects()
