@@ -320,6 +320,47 @@ def list_salarys():
                         if cell is not None else "") \
                         for cell in rowdata])
 
+def list_salary_locations():
+    output_file = r'c:\temp\salary_locations.csv'
+    with get_session() as session:
+        with open(output_file, "wb") as file_obj:
+            csv_writer = UTF8Writer(file_obj, quoting=csv.QUOTE_MINIMAL)
+            header=(
+                    "id",
+                    "name",
+                    "region_id",
+                    "region",
+                    "year",
+                    "rate_a",
+                    "rate_b",
+                    "rate_c",
+                    "rate_d",
+                    "rate_e",
+                    )
+            csv_writer.writerow(header)
+
+            locations = session.query(Location).all()
+            for location in locations:
+                region = location.salary_region
+                costs = region.costs if region is not None else None
+                if costs is not None:
+                    for cost in costs:
+                        rowdata = (
+                                location.id_,
+                                location.name,
+                                region.VSR_ID if region is not None else None,
+                                region.name if region is not None else None,
+                                cost.year if cost is not None else None,
+                                cost.rate_a if costs is not None else None,
+                                cost.rate_b if costs is not None else None,
+                                cost.rate_c if costs is not None else None,
+                                cost.rate_d if costs is not None else None,
+                                cost.rate_e if costs is not None else None,
+                                )
+                        csv_writer.writerow([unicode(cell \
+                                if cell is not None else "") \
+                                for cell in rowdata])
+
 if __name__ == '__main__':
     list_locations()
     list_companys()
@@ -328,3 +369,4 @@ if __name__ == '__main__':
     list_departments()
     list_employees()
     list_salarys()
+    list_salary_locations()
