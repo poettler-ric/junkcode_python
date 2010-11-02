@@ -6,6 +6,7 @@ from inet_old import Employee, EmployeeData, EmployeeFunction
 from inet_old import Project
 from inet_old import Department
 from inet_old import SalaryRegionCost
+from inet_old import CostCenter
 
 # imports for higher efficiency of the sql selects
 from inet_old import location_table
@@ -361,6 +362,31 @@ def list_salary_locations():
                                 if cell is not None else "") \
                                 for cell in rowdata])
 
+def list_cost_centers():
+    output_file = r'c:\temp\cost_centers.csv'
+    with get_session() as session:
+        with open(output_file, "wb") as file_obj:
+            csv_writer = UTF8Writer(file_obj, quoting=csv.QUOTE_MINIMAL)
+            header=(
+                    'id',
+                    'code',
+                    'name',
+                    'location_id',
+                    )
+            csv_writer.writerow(header)
+
+            query = session.query(CostCenter)
+            for cost_center in query.all():
+                rowdata = (
+                        cost_center.VCC_ID,
+                        cost_center.code,
+                        cost_center.name,
+                        cost_center.VCC_Company_LOC_ID,
+                        )
+                csv_writer.writerow([unicode(cell \
+                        if cell is not None else "") \
+                        for cell in rowdata])
+
 if __name__ == '__main__':
     list_locations()
     list_companys()
@@ -370,3 +396,4 @@ if __name__ == '__main__':
     list_employees()
     list_salarys()
     list_salary_locations()
+    list_cost_centers()
