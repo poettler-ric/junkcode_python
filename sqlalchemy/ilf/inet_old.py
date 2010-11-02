@@ -175,7 +175,7 @@ location_table = Table('loc_location', metadata,
         Column('LOC_Name_de', String(100), key='name_de'),
         Column('LOC_ERPS_ID', Integer),
         Column('LOC_VCAL_ID', Integer),
-        Column('LOC_VSR_ID', Integer),
+        Column('LOC_VSR_ID', Integer, ForeignKey('value_salaryregion.VSR_ID')),
         Column('LOC_Comments', String, key='comment'),
         Column('LOC_Manager1_E_ID', Integer, ForeignKey('e_employee.E_ID')),
         Column('LOC_Manager2_E_ID', Integer, ForeignKey('e_employee.E_ID')),
@@ -269,6 +269,23 @@ value_costcenter_table = Table('value_costcenter', metadata,
         Column('VCC_Name', String(50), key='name'),
         )
 
+value_salaryregion_table = Table('value_salaryregion', metadata,
+        Column('VSR_ID', Integer, primary_key=True),
+        Column('VSR_Name_en', String(50), key='name'),
+        Column('VSR_Name_de', String(50), key='name_de'),
+        )
+
+value_salaryregioncost_table = Table('value_salaryregioncosts', metadata,
+        Column('VSRC_ID', Integer, primary_key=True),
+        Column('VSRC_VSR_ID', Integer, ForeignKey('value_salaryregion.VSR_ID')),
+        Column('VSRC_Year', Integer, key='year'),
+        Column('VSRC_RateA_EUR', Float, key='rate_a'),
+        Column('VSRC_RateB_EUR', Float, key='rate_b'),
+        Column('VSRC_RateC_EUR', Float, key='rate_c'),
+        Column('VSRC_RateD_EUR', Float, key='rate_d'),
+        Column('VSRC_RateE_EUR', Float, key='rate_e'),
+        )
+
 class Address(object):
     def __repr__(self):
         return "<Address: %s, %s %s>" \
@@ -326,6 +343,16 @@ class CostCenter(object):
     def __repr__(self):
         return u"<CostCenter: %s>" % self.name
 
+class SalaryRegion(object):
+    def __repr__(self):
+        return u"<SalaryRegion: %s>" % self.name
+
+class SalaryRegionCost(object):
+    def __repr__(self):
+        return u"<SalaryRegionCost: region: %s year: %s>" \
+                % (self.region.name if self.region is not None else None,
+                        self.year)
+
 mapper(Address, address_table, properties={
     'country': relationship(Country),
     })
@@ -358,6 +385,7 @@ mapper(Location, location_table, properties={
     'manager3': relationship(Employee,
         primaryjoin=location_table.c.LOC_Manager3_E_ID==employee_table.c.E_ID),
     'is_legal': column_property(location_table.c.legal==-1),
+    'salary_region': relationship(SalaryRegion),
     })
 mapper(Department, value_department_table, properties={
     'manager1': relationship(Employee,
@@ -400,6 +428,10 @@ mapper(EmployeeData, employeedata_table, properties={
 mapper(EmployeeFunction, value_employee_function_table)
 mapper(CostCenter, value_costcenter_table, properties={
     'location': relationship(Location),
+    })
+mapper(SalaryRegion, value_salaryregion_table)
+mapper(SalaryRegionCost, value_salaryregioncost_table, properties={
+    'region': relationship(SalaryRegion, backref='costs')
     })
 
 Session = sessionmaker(bind=engine)
