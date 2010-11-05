@@ -1,0 +1,11 @@
+<html>
+    <head>
+    {% block head -%}
+    <title>{% block title %}Default Title{% endblock %}</title>
+    <!-- master stylesheet goes here -->
+    {%- endblock %}
+    </head>
+    <body>
+    {% block content%}{% endblock %}
+    </body>
+</html>

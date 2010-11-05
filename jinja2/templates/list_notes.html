@@ -1,0 +1,13 @@
+{% extends "master.html" %}
+{% block title %}Note Listing{% endblock %}
+{% block head -%}
+    {{ super() }}
+    <!-- additional stylesheet added in child -->
+{%- endblock %}
+{% block content -%}
+    <ul>
+    {%- for note in notes %}
+    <li>{{ note.author }} on {{ note.date }}: {{ note.message }}</li>
+    {%- endfor %}
+    </ul>
+{%- endblock %}
