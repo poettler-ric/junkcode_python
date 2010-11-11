@@ -20,12 +20,12 @@ engine = create_engine("mysql+mysqlconnector://%s:%s@%s:%d/%s"
 metadata = MetaData(engine)
 
 # reflect the needed tables
-persons = Table("p_Person", metadata, autoload=True)
-employee = Table("e_Employee", metadata, autoload=True)
-employee_data = Table("ed_EmployeeData", metadata, autoload=True)
-location = Table("loc_Location", metadata, autoload=True)
-employee_training = Table("et_EmployeeTraining", metadata, autoload=True)
-employee_training_status = Table("value_EmployeeTrainingStatus", metadata, autoload=True)
+persons = Table("P_Person", metadata, autoload=True)
+employee = Table("E_Employee", metadata, autoload=True)
+employee_data = Table("ED_EmployeeData", metadata, autoload=True)
+location = Table("LOC_Location", metadata, autoload=True)
+employee_training = Table("ET_EmployeeTraining", metadata, autoload=True)
+employee_training_status = Table("Value_EmployeeTrainingStatus", metadata, autoload=True)
 
 # prepare the query from which to select the values
 query = select([func.concat(persons.c.P_Name, ", ", persons.c.P_FirstNames)],
