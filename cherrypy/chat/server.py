@@ -35,7 +35,7 @@ config = {
     '/static': {
         'tools.staticdir.on': True,
         'tools.staticdir.dir': os.path.join(current_dir, 'static'),
-    }
+    },
 }
 
 cherrypy.tree.mount(Controller(), '/', config)
