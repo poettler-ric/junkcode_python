@@ -1,10 +1,16 @@
-var lastId = -1
+var lastId = -1;
+var user;
+var message;
 
 function readMessages(messages) {
     output = $('#messages');
     if (messages.length > 0) {
 	$.each(messages, function(index, message) {
-		output.append(message.user + ': ' + message.message + '\n');
+		output.val(output.val()
+		    + message.user
+		    + ': '
+		    + message.message
+		    + '\n');
 		lastId++;
 	});
     }
@@ -17,14 +23,14 @@ function sendMessage() {
     data = {
 	lastId: lastId,
 	user: user,
-	message: message,
-    }
+	message: message
+    };
     $.getJSON('/postMessage', data, readMessages);
  }
 
 function retrieveMessages() {
     $.getJSON('/getMessage', { lastId: lastId }, readMessages);
-    setTimeout('retrieveMessages();', 1000);
+    setTimeout(retrieveMessages, 1000);
 }
 
 $(document).ready(function() {
@@ -34,5 +40,5 @@ $(document).ready(function() {
 	    sendMessage();
 	    $('#message').val("");
 	}
-    })
-})
+    });
+});
