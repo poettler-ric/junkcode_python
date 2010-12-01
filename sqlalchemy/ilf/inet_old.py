@@ -286,6 +286,21 @@ value_salaryregioncost_table = Table('value_salaryregioncosts', metadata,
         Column('VSRC_RateE_EUR', Float, key='rate_e'),
         )
 
+value_userright_table = Table('value_userright', metadata,
+        Column('VUR_ID', Integer, primary_key=True, key='id'),
+        Column('VUR_Name_en', Integer, key='name'),
+        Column('VUR_Name_de', Integer, key='name_de'),
+        Column('VUR_Timestamp', DateTime),
+        )
+
+employeerights_table = Table('er_employeerights', metadata,
+        Column('ER_ID', Integer, primary_key=True),
+        Column('ER_E_ID', Integer, ForeignKey('e_employee.E_ID')),
+        Column('ER_VUR_ID', Integer, ForeignKey('value_userright.id'), key='right_id'),
+        Column('ER_Type', Integer, key='type'),
+        Column('ER_Timestamp', DateTime),
+        )
+
 class Address(object):
     def __repr__(self):
         return u"<Address: %s, %s %s>" \
@@ -351,6 +366,16 @@ class SalaryRegionCost(object):
     def __repr__(self):
         return u"<SalaryRegionCost: region: %s year: %s>" \
                 % (self.region, self.year)
+
+class UserRight(object):
+    def __repr__(self):
+        return u"<UserRight: %s %s>" \
+                % (self.id, self.name)
+
+class EmployeeRight(object):
+    def __repr__(self):
+        return u"<EmployeeRight: employee: %s userright: %s type: %s>" \
+                % (self.ER_E_ID, self.ER_VUR_ID, self.ER_Type)
 
 mapper(Address, address_table, properties={
     'country': relationship(Country),
@@ -431,6 +456,11 @@ mapper(CostCenter, value_costcenter_table, properties={
 mapper(SalaryRegion, value_salaryregion_table)
 mapper(SalaryRegionCost, value_salaryregioncost_table, properties={
     'region': relationship(SalaryRegion, backref='costs'),
+    })
+mapper(UserRight, value_userright_table)
+mapper(EmployeeRight, employeerights_table, properties={
+    'employee': relationship(Employee, backref='rights'),
+    'right': relationship(Employee),
     })
 
 Session = sessionmaker(bind=engine)
