@@ -302,16 +302,16 @@ employeerights_table = Table('ER_EmployeeRights', metadata,
         )
 
 class Address(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<Address: %s, %s %s>" \
                 % (self.street, self.zip_code, self.city)
 
 class Project(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<Project: %s %s>" % (self.number, self.name)
 
 class Company(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<Company: %s>" % self.name
 
 class Location(object):
@@ -326,54 +326,54 @@ class Location(object):
             return 2
         return 1
 
-    def __repr__(self):
+    def __str__(self):
         return u"<Location: %s>" % self.name
 
 class Department(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<Department: %s %s>" % (self.code, self.name)
 
 class Country(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<Country: %s>" % self.name
 
 class Employee(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<Employee: %s %s>" % (self.personal_number, self.login)
 
 class EmployeeData(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<EmployeeData: %s %s to %s>" \
                 % (self.employee.login, self.from_, self.to)
 
 class Person (object):
-    def __repr__(self):
+    def __str__(self):
         return u"<Person: %s %s>" % (self.name, self.firstname)
 
 class EmployeeFunction(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<EmployeeFunction: %s>" % self.name
 
 class CostCenter(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<CostCenter: %s>" % self.name
 
 class SalaryRegion(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<SalaryRegion: %s>" % self.name
 
 class SalaryRegionCost(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<SalaryRegionCost: region: %s year: %s>" \
                 % (self.region, self.year)
 
 class UserRight(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<UserRight: %s %s>" \
                 % (self.id, self.name)
 
 class EmployeeRight(object):
-    def __repr__(self):
+    def __str__(self):
         return u"<EmployeeRight: employee: %s userright: %s type: %s>" \
                 % (self.ER_E_ID, self.ER_VUR_ID, self.ER_Type)
 
