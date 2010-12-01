@@ -350,8 +350,7 @@ class SalaryRegion(object):
 class SalaryRegionCost(object):
     def __repr__(self):
         return u"<SalaryRegionCost: region: %s year: %s>" \
-                % (self.region.name if self.region is not None else None,
-                        self.year)
+                % (self.region, self.year)
 
 mapper(Address, address_table, properties={
     'country': relationship(Country),
