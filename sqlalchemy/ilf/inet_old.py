@@ -288,7 +288,7 @@ value_salaryregioncost_table = Table('value_salaryregioncosts', metadata,
 
 class Address(object):
     def __repr__(self):
-        return "<Address: %s, %s %s>" \
+        return u"<Address: %s, %s %s>" \
                 % (self.street, self.zip_code, self.city)
 
 class Project(object):
@@ -301,13 +301,13 @@ class Company(object):
 
 class Location(object):
     def get_layer(self):
-        if self.layer5 != 0:
+        if self.layer5:
             return 5
-        if self.layer4 != 0:
+        if self.layer4:
             return 4
-        if self.layer3 != 0:
+        if self.layer3:
             return 3
-        if self.layer2 != 0:
+        if self.layer2:
             return 2
         return 1
 
@@ -405,7 +405,7 @@ mapper(Employee, employee_table, properties={
     'data': relationship(EmployeeData,
         primaryjoin=\
                 employee_table.c.E_Current_ED_ID==employeedata_table.c.ED_ID),
-    'person': relationship(Person, uselist=False)
+    'person': relationship(Person, uselist=False),
     })
 mapper(Person, person_table)
 mapper(EmployeeData, employeedata_table, properties={
@@ -431,7 +431,7 @@ mapper(CostCenter, value_costcenter_table, properties={
     })
 mapper(SalaryRegion, value_salaryregion_table)
 mapper(SalaryRegionCost, value_salaryregioncost_table, properties={
-    'region': relationship(SalaryRegion, backref='costs')
+    'region': relationship(SalaryRegion, backref='costs'),
     })
 
 Session = sessionmaker(bind=engine)
