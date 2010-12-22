@@ -10,8 +10,16 @@ class Test(object):
         self.val1 = val1
         self.val2 = val2
 
+    def static():
+        print "test"
+
+    def test(self):
+        print val1
+
 test = Test("a", "b")
 print dir(test)
 print "filtered:"
 for field in fields(test):
-    print field, '=', getattr(test, field)
+    print field, '=', getattr(test, field), type(getattr(test, field))
+
+print type(fields)
