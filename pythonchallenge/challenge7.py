@@ -13,6 +13,7 @@ import urllib
 
 url = "http://www.pythonchallenge.com/pc/def/oxygen.png"
 file_name = tempfile.mktemp('-challenge7')
+max_area_width = 7 # we assume the maximum area width (for double letters)
 R, G, B, A = 0, 1, 2, 3 # red, green, blue, alpha
 X, Y = 0, 1
 
@@ -37,9 +38,7 @@ for i in xrange(image.size[X]):
         end_x = i
         break
 
-max_area_width = 7 # we assume the maximum area width (for double letters)
 collected = ""
-
 # iterate over the grey bar
 for i in xrange(0, end_x, max_area_width):
     collected += chr(pixels[i, begin_y][R])
