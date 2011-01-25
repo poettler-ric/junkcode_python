@@ -13,6 +13,8 @@ import urllib
 
 url = "http://www.pythonchallenge.com/pc/def/oxygen.png"
 file_name = tempfile.mktemp('-challenge7')
+R, G, B, A = 0, 1, 2, 3 # red, green, blue, alpha
+X, Y = 0, 1
 
 urllib.urlretrieve(url, file_name)
 
@@ -21,17 +23,17 @@ pixels = image.load()
 
 # determine the fist grey pixel in the first row
 begin_y = -1
-for i in xrange(image.size[1]):
+for i in xrange(image.size[Y]):
     pixel = pixels[0, i]
-    if pixel[0] == pixel[1] == pixel[2]:
+    if pixel[R] == pixel[G] == pixel[B]:
         begin_y = i
         break
 
 # determine the last nongrey pixel in the grey row
 end_x = -1
-for i in xrange(image.size[0]):
+for i in xrange(image.size[X]):
     pixel = pixels[i, begin_y]
-    if not pixel[0] == pixel[1] == pixel[2]:
+    if not pixel[R] == pixel[G] == pixel[B]:
         end_x = i
         break
 
@@ -40,8 +42,7 @@ collected = ""
 
 # iterate over the grey bar
 for i in xrange(0, end_x, max_area_width):
-    red_value = pixels[i, begin_y][0]
-    collected += chr(red_value)
+    collected += chr(pixels[i, begin_y][R])
 
 print collected
 
