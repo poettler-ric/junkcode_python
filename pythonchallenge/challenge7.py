@@ -21,13 +21,13 @@ image = Image.open(file_name)
 box_pixels = image.crop(box_coordinates).load()
 
 last_value = ord(' ') # initialize with a space
-max_area_with = 7 # we assume the maximum area with (for double letters)
+max_area_width = 7 # we assume the maximum area width (for double letters)
 count = 0
 collected = ""
 
 for i in xrange(box_coordinates[2]):
     value = box_pixels[i, 0][0]
-    if value != last_value or count >= max_area_with:
+    if value != last_value or count >= max_area_width:
         collected += chr(last_value)
         last_value = value
         count = 1
