@@ -38,8 +38,8 @@ for i in xrange(image.size[X]):
         end_x = i
         break
 
-collected = ""
 # iterate over the grey bar
+collected = ""
 for i in xrange(0, end_x, max_area_width):
     collected += chr(pixels[i, begin_y][R])
 
