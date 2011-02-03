@@ -13,6 +13,9 @@ import os.path
 import re
 import urllib2
 
+"""ULR to challenge 8."""
+challenge_8_url = "http://www.pythonchallenge.com/pc/def/integrity.html"
+
 class Challange8HTMLParser(HTMLParser):
     """
     Extracts username, password and the link for the next page out of the
@@ -43,14 +46,23 @@ class Challange8HTMLParser(HTMLParser):
                     self.href = value
                     break
 
-url = "http://www.pythonchallenge.com/pc/def/integrity.html"
 
-with closing(urllib2.urlopen(url)) as page:
+def getChallenge8Source():
+    """
+    Returns the HTML Source for the 8th challenge.
+    """
+    with closing(urllib2.urlopen(challenge_8_url)) as page:
+        return page.read()
+
+def getChallenge9Source():
+    """
+    Returns the HTML Source for the 9th challenge.
+    """
     with closing(Challange8HTMLParser()) as parser:
         # parse the actual page for the data
-        parser.feed(page.read())
+        parser.feed(getChallenge8Source())
 
-        to_open = os.path.join(os.path.dirname(url), parser.href)
+        to_open = os.path.join(os.path.dirname(challenge_8_url), parser.href)
 
         # construct the urlopener with the password handler
         password_manager = urllib2.HTTPPasswordMgrWithDefaultRealm()
@@ -61,7 +73,15 @@ with closing(urllib2.urlopen(url)) as page:
 
         # finally read the content of the new challenge
         with closing(opener.open(to_open)) as content:
-            print content.read()
+            return content.read()
+
+
+if __name__ == "__main__":
+    with closing(Challange8HTMLParser()) as parser:
+        # parse the actual page for the data
+        parser.feed(getChallenge8Source())
+
+        to_open = os.path.join(os.path.dirname(challenge_8_url), parser.href)
 
         print "username:", parser.username
         print "password:", parser.password
