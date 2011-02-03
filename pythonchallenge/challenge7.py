@@ -22,7 +22,7 @@ urllib.urlretrieve(url, file_name)
 image = Image.open(file_name)
 pixels = image.load()
 
-# determine the fist grey pixel in the first row
+# determine the frist row with a grey pixel in the first column
 begin_y = -1
 for i in xrange(image.size[Y]):
     pixel = pixels[0, i]
