@@ -14,6 +14,8 @@ class is called object.
 
 
 class Person(object):
+    """Class representing a person."""
+
     def __init__(self, name, age):
         """This is called an 'initializer'. It might take some parameters (here
         a name an an age) and initializes the object.
@@ -65,20 +67,20 @@ class Person(object):
         return "Person(name: '{}', age {})".format(self.name, self.age)
 
 
-"""Classes can inherit properties and methods from another class. The new class
-mostly is entiched with additional properties and methods or specialized for a
-given usecase. This is called inheritance. The class which inherits is called
-subclass, the class from which is inherited is called superclass.
-
-E.g. We want to represent an actor. An actor is a more specialized version of a
-person so we can take the blueprint of a person and enrich it with additional
-functionality.
-
-A subclass could be seen as a copy of the superclass overwritten/enriched with
-new methods and properties."""
-
-
 class VIP(Person):
+    """Classes can inherit properties and methods from another class. The new
+    class mostly is entiched with additional properties and methods or
+    specialized for a given usecase. This is called inheritance. The class which
+    inherits is called subclass, the class from which is inherited is called
+    superclass.
+
+    E.g. We want to represent an actor. An actor is a more specialized version
+    of a person so we can take the blueprint of a person and enrich it with
+    additional functionality.
+
+    A subclass could be seen as a copy of the superclass overwritten/enriched
+    with new methods and properties."""
+
     def __init__(self, name, age, agent):
         """Additional to a person's name a vip has an agent.
 
