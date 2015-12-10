@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+
 def frange(*args):
     """range(...) yielding floats."""
     if len(args) == 1:
@@ -9,7 +10,8 @@ def frange(*args):
     if len(args) == 3:
         return _frange(args[0], args[1], args[2])
     raise ValueError("frange is only defined for 1, 2 and 3 arguments")
-    
+
+
 def _frange(start, stop, step):
     """range(...) yielding floats."""
     cur = float(start)
