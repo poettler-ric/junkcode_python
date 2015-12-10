@@ -70,9 +70,9 @@ class Person(object):
 class VIP(Person):
     """Classes can inherit properties and methods from another class. The new
     class mostly is entiched with additional properties and methods or
-    specialized for a given usecase. This is called inheritance. The class which
-    inherits is called subclass, the class from which is inherited is called
-    superclass.
+    specialized for a given usecase. This is called inheritance. The class
+    which inherits is called subclass, the class from which is inherited is
+    called superclass.
 
     E.g. We want to represent an actor. An actor is a more specialized version
     of a person so we can take the blueprint of a person and enrich it with
