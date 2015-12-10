@@ -11,13 +11,15 @@ it. A person could have a name and a age.
 A class is a blueprint. An instance created according to the blueprint of a
 class is called object.
 """
+
+
 class Person(object):
     def __init__(self, name, age):
         """This is called an 'initializer'. It might take some parameters (here
         a name an an age) and initializes the object.
-        
+
         'self' always references the object itself.
-        
+
         The name and age are saved in the object. name and age are called the
         object's/Person's properties.
         """
@@ -32,8 +34,8 @@ class Person(object):
         object's internal variables. E.g. the object of a person has access to
         it's name.
 
-        Even if the method doesn't take any parameters 'self' must be defined to
-        tell the interpreter on which object the method should be executed.
+        Even if the method doesn't take any parameters 'self' must be defined
+        to tell the interpreter on which object the method should be executed.
 
         Difference between method and function: A function mainly has just the
         parameters passed to it to work with. A method is 'attached' to an
@@ -57,6 +59,7 @@ class Person(object):
         """Human readable representation of the object. This is automatically
         used when e.g. printing the object."""
         return "Person(name: '{}', age {})".format(self.name, self.age)
+
 
 class VIP(Person):
     def __init__(self, name, age, agent):
