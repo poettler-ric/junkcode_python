@@ -6,8 +6,6 @@ def my_function():
     """Example module function"""
     print("= inside function")
 
-print("= inside module")
-
 class MyClass:
     """Example Class"""
     print("= inside class")
@@ -24,3 +22,7 @@ class MyClass:
     def my_class_function():
         """Example static function"""
         print("= inside class function")
+
+print("= inside module (e.g. some calculations)")
+if __name__ == '__main__':
+    print("= inside main guard")
