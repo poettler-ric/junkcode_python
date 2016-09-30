@@ -3,19 +3,24 @@ Dummy module to show, when which code gets executed.
 """
 
 def my_function():
-	print "= inside function"
+    """Example module function"""
+    print("= inside function")
 
-print "= inside module"
+print("= inside module")
 
 class MyClass:
-	print "= inside class"
+    """Example Class"""
+    print("= inside class")
 
-	def __init__(self):
-		print "= inside constructor"
+    def __init__(self):
+        """Empty initializer"""
+        print("= inside constructor")
 
-	def my_method(self):
-		print "= inside method"
-	
-	@staticmethod
-	def my_class_function():
-		print "= inside class function"
+    def my_method(self):
+        """Example method"""
+        print("= inside method")
+
+    @staticmethod
+    def my_class_function():
+        """Example static function"""
+        print("= inside class function")
