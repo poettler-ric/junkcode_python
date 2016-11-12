@@ -1,22 +1,24 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
-import sys
-import yaml
+"""Recursively walk through dicts read from a yaml file."""
 
-if len(sys.argv) < 3:
-    sys.exit("Usage: {} <filename> <keys>".format(sys.argv[0]))
+from sys import argv
+from yaml import load
 
-separator = '.'
-fileName = sys.argv[1]
-keys = sys.argv[2]
+if len(argv) < 3:
+    exit("Usage: {} <file_name> <keys>".format(argv[0]))
 
-path = keys.split(separator)
+SEPARATOR = '.'
+file_name = argv[1] # pylint: disable=C0103
+keys = argv[2] # pylint: disable=C0103
 
-with open(fileName, 'r') as f:
-    value = yaml.load(f)
+path = keys.split(SEPARATOR) # pylint: disable=C0103
+
+with open(file_name, 'r') as f:
+    value = load(f) # pylint: disable=C0103
     for key in path:
         value = value.get(key)
         if not value:
-            sys.exit("Couldn't find key '{}' from '{}' in '{}'"
-                .format(key, keys, fileName))
+            exit("Couldn't find key '{}' from '{}' in '{}'"
+                 .format(key, keys, file_name))
     print(value)
