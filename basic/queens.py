@@ -1,6 +1,11 @@
+#!/usr/bin/env python3
+
+"""Solve the 8 queens puzzle using backtracking."""
+
 BOARD_SIZE = 4
 
 def is_attacked(row, column, queens):
+    """Checks whether a field is attacked by a list of queens."""
     for q in queens:
         if row == q[0]:
             return True
@@ -13,21 +18,30 @@ def is_attacked(row, column, queens):
     return False
 
 def try_row(row, queens):
-    for c in range(BOARD_SIZE):
-        attacked = is_attacked(row, c, queens)
+    """Try to place the queens using backtracking"""
+    for column in range(BOARD_SIZE):
+        attacked = is_attacked(row, column, queens)
+
         if not attacked:
-            break
-    if attacked and c == BOARD_SIZE:
-        return False
-    queens.append((row, c))
-    if not row == BOARD_SIZE:
-        pass
-    return True
+            # place queen
+            tmp_queens = set(queens)
+            tmp_queens.add((row, column))
 
-queens = []
-try_row(0, queens)
+            if row == BOARD_SIZE - 1:
+                # we are on the last row
+                return tmp_queens
+            else:
+                # try to solve next row
+                result = trying(row + 1, tmp_queens)
+                if not result:
+                    # we couldn't find a match
+                    continue
+                else:
+                    # we successfully could place the last queen - break recursion
+                    return result
+    return False
 
-queens = [(0, 0)]
-print(is_attacked(1,1,queens))
-print(is_attacked(2,2,queens))
-print(is_attacked(1,2,queens))
+
+if __name__ == '__main__':
+    queens = try_row(0, set())
+    print(queens)
